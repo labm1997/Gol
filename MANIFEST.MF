@@ -1,2 +1,0 @@
-Main-Class: br.unb.cic.poo.gol.Main
-Class-Path: scala-library.jar
