@@ -4,25 +4,19 @@ import scala.collection.mutable.ListBuffer
 import scala.util.control.TailCalls.TailRec
 import scala.annotation.tailrec
 
-trait EstrategiaDeDerivacao {
+trait Regra {
   def shouldKeepAlive(i: Int, j: Int): Boolean
   def shouldRevive(i: Int, j: Int): Boolean
-}
-
-abstract class Regra extends EstrategiaDeDerivacao {
   var nome: String
 }
 
+
 object Regras {
   private var listaDeRegras = new ListBuffer[Regra]
-  private var regraAtual: Regra = null
-  
-  listaDeRegras += new Conway
-  regraAtual = listaDeRegras(0)
-  def obterRegra = regraAtual  
+  listaDeRegras += Conway
 }
 
-class Conway extends Regra {
+object Conway extends Regra {
   var nome = "Conway"
   /* verifica se uma celula deve ser mantida viva */
   def shouldKeepAlive(i: Int, j: Int): Boolean = {
@@ -171,11 +165,17 @@ object GameEngine {
   }
   
   
+  /* Regra atual */
+  private var regra: Regra = null;
+  
+  /* Define a regra atual */
+  def definirRegra(novaRegra: Regra) = regra = novaRegra
+  
   /* verifica se uma celula deve ser mantida viva */
-  private def shouldKeepAlive(i: Int, j: Int): Boolean = Regras.obterRegra.shouldKeepAlive(i,j)
+  private def shouldKeepAlive(i: Int, j: Int): Boolean = regra.shouldKeepAlive(i,j)
   
   /* verifica se uma celula deve (re)nascer */
-  private def shouldRevive(i: Int, j: Int): Boolean = Regras.obterRegra.shouldRevive(i,j)
+  private def shouldRevive(i: Int, j: Int): Boolean = regra.shouldRevive(i,j)
   
   /* Calcula a posição caso haja overflow ou underflow */
   private def posicao(i: Int, limite: Int): Int = (i%limite+limite)%limite
@@ -188,7 +188,6 @@ object GameEngine {
     var alive = 0
     for(a <- (i - 1 to i + 1)) {
       for(b <- (j - 1 to j + 1)) {
-        println(posicao(a,height))
         if ((!(posicao(a,height)==i && posicao(b,width) == j)) && cells(posicao(a,height))(posicao(b,width)).isAlive) {
 					alive += 1
 				}
