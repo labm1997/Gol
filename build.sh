@@ -1,5 +1,6 @@
 # Parâmetros
 main="br.unb.cic.poo.gol.Main"
+saida="Gol.jar"
 
 # Cores
 normal="\x1B[0m"
@@ -18,8 +19,11 @@ if [ "$1" == "limpar" ]; then
 	if [ -f "MANIFEST.MF" ]; then
 		rm MANIFEST.MF
 	fi
+	if [ -f "MANIFEST.MF.old" ]; then
+		rm MANIFEST.MF.old
+	fi
 	if [ -f "Gol.jar" ]; then
-		rm Gol.jar
+		rm $saida
 	fi
 	exit
 fi
@@ -46,11 +50,19 @@ else
 	echo -e "Main-Class: "$main"\nClass-Path: "$1 > MANIFEST.MF
 fi
 
+# Verifica se há o Main
+if [ ! -f "src/"$(echo $main | sed "s/\./\//g")".scala" ]; then
+	echo -e "[ "$vermelho"ERRO"$normal" ] NÃO VAI DAR NÃO"
+	echo -e "[ "$vermelho"ERRO"$normal" ] NÃO ACHEI src/"$(echo $main | sed "s/\./\//g")".scala"
+	exit
+fi
+
 # Gera a pasta de compilação, compila e gera o Java Archive
 if [ ! -d "bin" ]; then
 	mkdir bin
 fi
-scalac -sourcepath src -d bin src/br/unb/cic/poo/gol/Main.scala
+
+scalac -sourcepath src -d bin src/$(echo $main | sed "s/\./\//g").scala
 cd bin
-jar -cfm ../Gol.jar ../MANIFEST.MF *
+jar -cfm ../$saida ../MANIFEST.MF *
 cd ..
