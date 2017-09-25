@@ -1,13 +1,18 @@
 # Gol
-Para compilar um .jar execute o build.sh
+Para compilar um .jar execute o build.sh passando o caminho do arquivo scala-library.jar
 ```
-./build.sh
+./build.sh CAMINHO
 ```
 # Requisitos:
-  * scalac
-  * jar
+  * scala - Scala programming language
+  * fastjar - Jar creation utility
 # Executar
 Para executar faça:
 ```
 java -jar Gol.jar
+```
+# Limpar
+Para limpar a compilação faça;
+```
+./build.sh limpar
 ```
