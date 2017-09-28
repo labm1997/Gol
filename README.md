@@ -12,5 +12,5 @@ sbt:user> assembly
 # Executar
 Para executar faça:
 ```
-java -jar ARQUIVO
+java -jar ARQUIVO 
 ```
