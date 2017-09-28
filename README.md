@@ -1,18 +1,16 @@
 # Gol
-Para compilar um .jar execute o build.sh passando o caminho do arquivo scala-library.jar
+Para compilar um .jar do app é preciso gerar um do base e colocar em app/lib
+A compilação se faz pelo sbt:
 ```
-./build.sh CAMINHO
+$ sbt
+sbt:user> assembly
 ```
 # Requisitos:
   * scala - Scala programming language
-  * fastjar - Jar creation utility
+  * sbt
+  * sbt-assembly - Plug-in sbt assembly para o sbt
 # Executar
 Para executar faça:
 ```
-java -jar Gol.jar
-```
-# Limpar
-Para limpar a compilação faça;
-```
-./build.sh limpar
+java -jar ARQUIVO
 ```

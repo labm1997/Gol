@@ -1,3 +1,5 @@
 *.class
 *.log
 *.jar
+app/target
+base/target
