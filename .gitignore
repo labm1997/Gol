@@ -3,3 +3,5 @@
 *.jar
 app/target
 base/target
+app/project/target
+base/project/target
