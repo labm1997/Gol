@@ -1,6 +1,7 @@
 *.class
 *.log
 *.jar
+*.swp
 app/target
 base/target
 app/project/target
