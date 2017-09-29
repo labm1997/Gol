@@ -1,6 +1,6 @@
 package br.unb.cic.poo.gol.base
 
-object Conway extends Regra {
+class Conway extends Regra {
   var nome = "Conway"
   /* verifica se uma celula deve ser mantida viva */
   def shouldKeepAlive(i: Int, j: Int): Boolean = {
