@@ -72,11 +72,9 @@ object GameView {
 	  
 	  do {
       print("\n Inform the row number (0 - " + (GameEngine.height - 1) + "): ")
-      i = readInt
-      
+      i = parseRowandColumn(readLine).getOrElse(-1)
       print("\n Inform the column number (0 - " + (GameEngine.width - 1) + "): ")
-      j = readInt
-      
+      j = parseRowandColumn(readLine).getOrElse(-1)
     } while(!validPosition(i,j))
       
     GameController.makeCellAlive(i, j)
@@ -86,8 +84,6 @@ object GameView {
   private def halt = GameController.halt
 	
   private def validPosition(i: Int, j: Int): Boolean = {
-		println(i);
-		println(j);
 		i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width
 	}
   
@@ -119,4 +115,12 @@ object GameView {
 		println()
 	}
   
+
+  def parseRowandColumn(x: String): Option[Int] = {
+    try {
+      Some(x.toInt)
+    } catch {
+      case e: Exception => None
+    }
+  }
 }

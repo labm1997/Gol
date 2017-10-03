@@ -4,6 +4,8 @@ import scala.collection.mutable.ListBuffer
 import scala.util.control.TailCalls.TailRec
 import scala.annotation.tailrec
 
+import scala.io.Source
+
 /**
  * Representa a Game Engine do GoL 
  * 
@@ -13,26 +15,14 @@ object GameEngine {
   
   val height = GameView.obterAltura
   val width = GameView.obterLargura
+  var li=0
+  var lj=0
   
-  val cells = Array.ofDim[Cell](height, width)
+  /* Instanciando as células na matriz */
+  val cells = Array.fill(height, width){new Cell}
   
+  Source.fromResource("configuracao.txt").getLines().foreach((s:String) => {s.split(" ").foreach((e:String) => {if(e.toInt == 1 && validPosition(li,lj)) cells(li)(lj).revive; lj=lj+1}); lj=0; li=li+1})
   
-  for(i <- (0 until height)) {
-    for(j <- (0 until width)) {
-      cells(i)(j) = new Cell
-    }
-  }
-  
-  for(i <- (0 until 2))
-    for(j <- (0 until 2))
-      cells(i)(j).revive
-      
-  cells(1)(9).revive
-  cells(0)(9).revive
-  cells(9)(0).revive
-  cells(9)(1).revive
-  cells(9)(9).revive
-
   /**
 	 * Calcula uma nova geracao do ambiente. Essa implementacao utiliza o
 	 * algoritmo do Conway, ou seja:
