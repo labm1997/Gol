@@ -16,6 +16,7 @@ object GameController {
   val timer = new Timer()
   
   def start {
+    GameView.createBoard
     GameView.update
   }
   
@@ -61,10 +62,9 @@ object GameController {
       def run = {
         cellsList.push(GameEngine.createMemento)
         GameEngine.nextGeneration
-        GameView.printBoard
       }
     }
-    timer.schedule(updateTask, 1000L, 1000L)
+    timer.schedule(updateTask, 17L, 17L)
     readLine
     updateTask.cancel()
     GameView.update

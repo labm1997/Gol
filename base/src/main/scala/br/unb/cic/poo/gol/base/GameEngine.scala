@@ -13,8 +13,9 @@ import scala.io.Source
  */
 object GameEngine {
   
-  val height = GameView.obterAltura
-  val width = GameView.obterLargura
+  val height = 100
+  val width = 100
+  val random = new java.security.SecureRandom
   
   /* Instanciando as células na matriz */
   var cells = Array.fill(height, width){new Cell}
@@ -37,13 +38,15 @@ object GameEngine {
     })
   }
   
-  Source.fromResource("configuracao.txt").getLines.zipWithIndex.foreach(lgroup => {
+  /*Source.fromResource("configuracao.txt").getLines.zipWithIndex.foreach(lgroup => {
     val (line,i) = lgroup
     line.split(" ").zipWithIndex.foreach(rgroup => {
       val (row,j) = rgroup
       if(row.toInt == 1 && validPosition(i,j)) cells(i)(j).revive;
     })
-  })
+  })*/
+  
+  cells.foreach(i => i.foreach(j => if(random.nextInt(2) == 1) j.revive))
   
   /**
 	 * Calcula uma nova geracao do ambiente. Essa implementacao utiliza o

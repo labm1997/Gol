@@ -2,11 +2,65 @@ package br.unb.cic.poo.gol.base
 
 import scala.io.StdIn.{readInt, readLine}
 
+import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 /**
  * Representa o componente View do GoL
  * 
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
  */
+ 
+class GolScreen(width: Int, height: Int, cellSize: Int) extends ApplicationListener {
+	private var batch: SpriteBatch = null
+	private var shapeRenderer: ShapeRenderer = null
+
+	override def create() {
+		batch = new SpriteBatch
+		shapeRenderer = new ShapeRenderer
+	}
+	
+	override def dispose() {
+	  batch.dispose
+	}
+
+	override def render() {
+	  Gdx.gl.glClearColor(0,0,0,1)
+	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+		batch.begin()
+		  for(i <- (0 until height)) {
+		    for(j <- (0 until width)) {
+		      shapeRenderer.begin(ShapeType.Filled);
+		        if(GameEngine.isCellAlive(i, j)){
+              shapeRenderer.setColor(1, 1, 1, 1);
+              shapeRenderer.rect(i*cellSize, j*cellSize, cellSize, cellSize);
+            }
+          shapeRenderer.end();
+        }
+      }
+		batch.end()
+	}
+	
+	override def resize(width: Int, height: Int) {
+	
+	}
+	
+	override def pause() {
+	
+	}
+	
+	override def resume() {
+	
+	}
+}
+ 
 object GameView {
   
 	private final val LINE = "+-----+"
@@ -20,9 +74,10 @@ object GameView {
 	private final val BACK_GENERATION = 4
 	private final val AUTOMATICO = 5
 	
-	private val largura = 10
-	private val altura = 10  
-
+	private val largura = GameEngine.width
+	private val altura = GameEngine.height
+	private val cellSize = 15
+	
 	def obterLargura = largura
 	def obterAltura = altura
   
@@ -30,7 +85,17 @@ object GameView {
 	 * Atualiza o componente view (representado pela classe GameBoard),
 	 * possivelmente como uma resposta a uma atualiza��o do jogo.
 	 */
-	def printBoard { 
+	def createBoard {
+  
+    val config: LwjglApplicationConfiguration = new LwjglApplicationConfiguration
+    config.title = "Oiiiiiiii"
+    config.width = largura*cellSize
+    config.height = altura*cellSize
+    config.useGL30 = false;
+    
+    new LwjglApplication(new GolScreen(largura,altura,cellSize), config)
+    
+    /*
 		printFirstRow
 		printLine
 		
@@ -40,11 +105,11 @@ object GameView {
 		  }
 		  println("   " + i)
 		  printLine
-		}
+		}*/
+		
 	}
 	
 	def update {
-	  printBoard
 		printOptions
 	}
   
@@ -151,4 +216,5 @@ object GameView {
     else {println("Opção inválida"); showRules(rules)}
     
   }
+    
 }
