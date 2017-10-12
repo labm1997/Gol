@@ -70,4 +70,8 @@ object GameController {
     GameView.update
   }
   
+  def setRule(rule: Regra) {
+    GameEngine.definirRegra(rule)
+  }
+  
 }

@@ -137,4 +137,18 @@ object GameView {
       case e: Exception => None
     }
   }
+  
+  def showRules(rules: List[Regra]) {
+  
+    var i = 1
+    
+    println("Selecione o modo de jogo:")
+    rules.foreach( a => {println("["+i+"] " + a.nome); i+=1})
+    
+    val valor = parseRowandColumn(readLine).getOrElse(0)
+      
+    if(valor > 0 && valor <= rules.length) GameController.setRule(rules(valor-1))
+    else {println("Opção inválida"); showRules(rules)}
+    
+  }
 }
