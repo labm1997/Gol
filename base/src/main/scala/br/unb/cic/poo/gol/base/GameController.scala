@@ -14,12 +14,6 @@ object GameController {
 
   val cellsList = new Stack[Memento]()
   val timer = new Timer()
-  val updateTask = new TimerTask {
-    def run = {
-      GameEngine.nextGeneration
-      GameView.printBoard
-    }
-  }
   
   def start {
     GameView.update
@@ -63,9 +57,16 @@ object GameController {
   }
   
   def automatico {
+    val updateTask = new TimerTask {
+      def run = {
+        cellsList.push(GameEngine.createMemento)
+        GameEngine.nextGeneration
+        GameView.printBoard
+      }
+    }
     timer.schedule(updateTask, 1000L, 1000L)
     readLine
-    timer.cancel()
+    updateTask.cancel()
     GameView.update
   }
   

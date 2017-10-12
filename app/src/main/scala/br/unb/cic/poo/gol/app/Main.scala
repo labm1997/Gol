@@ -15,6 +15,14 @@ import scala.collection.mutable.MutableList
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
  */
 
+/*object Main {
+  def main(args: Array[String]): Unit = {
+    val config: LwjglApplicationConfiguration = new LwjglApplicationConfiguration
+    new LwjglApplication(new GameCore, config)
+  }
+}*/
+
+
 object Main {
     
   def main(args: Array[String]){
