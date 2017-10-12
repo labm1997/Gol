@@ -9,6 +9,7 @@ import scala.io.Source
 import scala.io.StdIn
 import scala.collection.mutable.MutableList
 
+
 /**
  * Programa principal do GoL.
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br

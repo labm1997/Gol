@@ -15,13 +15,35 @@ object GameEngine {
   
   val height = GameView.obterAltura
   val width = GameView.obterLargura
-  var li=0
-  var lj=0
   
   /* Instanciando as células na matriz */
-  val cells = Array.fill(height, width){new Cell}
+  var cells = Array.fill(height, width){new Cell}
   
-  Source.fromResource("configuracao.txt").getLines().foreach((s:String) => {s.split(" ").foreach((e:String) => {if(e.toInt == 1 && validPosition(li,lj)) cells(li)(lj).revive; lj=lj+1}); lj=0; li=li+1})
+  /* Padrão de projeto Memento */
+  def createMemento: Memento = {
+    val m = new Memento
+    m.setState(cells)
+    return m
+  }
+  
+  def setMemento(m: Memento) = {
+    m.getState.zipWithIndex.foreach(lgroup => {
+      val (l,i) = lgroup
+      l.zipWithIndex.foreach(rgroup => {
+        val (r,j) = rgroup
+        if(r.isAlive) cells(i)(j).revive
+        else cells(i)(j).kill
+      })
+    })
+  }
+  
+  Source.fromResource("configuracao.txt").getLines.zipWithIndex.foreach(lgroup => {
+    val (line,i) = lgroup
+    line.split(" ").zipWithIndex.foreach(rgroup => {
+      val (row,j) = rgroup
+      if(row.toInt == 1 && validPosition(i,j)) cells(i)(j).revive;
+    })
+  })
   
   /**
 	 * Calcula uma nova geracao do ambiente. Essa implementacao utiliza o

@@ -17,6 +17,8 @@ object GameView {
 	private final val MAKE_CELL_ALIVE = 1
 	private final val NEXT_GENERATION = 2
 	private final val HALT = 3
+	private final val BACK_GENERATION = 4
+	private final val AUTOMATICO = 5
 	
 	private val largura = 10
 	private val altura = 10  
@@ -28,7 +30,7 @@ object GameView {
 	 * Atualiza o componente view (representado pela classe GameBoard),
 	 * possivelmente como uma resposta a uma atualiza��o do jogo.
 	 */
-	def update {
+	def printBoard { 
 		printFirstRow
 		printLine
 		
@@ -39,6 +41,10 @@ object GameView {
 		  println("   " + i)
 		  printLine
 		}
+	}
+	
+	def update {
+	  printBoard
 		printOptions
 	}
   
@@ -52,6 +58,8 @@ object GameView {
 			println("[1] Make a cell alive");
 			println("[2] Next generation");
 			println("[3] Halt");
+			println("[4] Back generation");
+			println("[5] Automatico");
 		
 			print("\n \n Option: ");
 			
@@ -62,6 +70,8 @@ object GameView {
       case MAKE_CELL_ALIVE => makeCellAlive
       case NEXT_GENERATION => nextGeneration
       case HALT => halt
+      case BACK_GENERATION => backGeneration
+      case AUTOMATICO => automatico
     }
 	}
   
@@ -81,6 +91,8 @@ object GameView {
 	}
 
   private def nextGeneration = GameController.nextGeneration
+  private def backGeneration = GameController.backGeneration
+  private def automatico = GameController.automatico
   private def halt = GameController.halt
 	
   private def validPosition(i: Int, j: Int): Boolean = {
@@ -91,6 +103,8 @@ object GameView {
     case "1" => MAKE_CELL_ALIVE
     case "2" => NEXT_GENERATION
     case "3" => HALT
+    case "4" => BACK_GENERATION
+    case "5" => AUTOMATICO
     case _ => INVALID_OPTION
   }
 	
