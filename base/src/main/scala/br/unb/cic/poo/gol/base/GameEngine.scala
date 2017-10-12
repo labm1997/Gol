@@ -4,6 +4,8 @@ import scala.collection.mutable.ListBuffer
 import scala.util.control.TailCalls.TailRec
 import scala.annotation.tailrec
 
+import scala.io.Source
+
 /**
  * Representa a Game Engine do GoL 
  * 
@@ -14,25 +16,35 @@ object GameEngine {
   val height = GameView.obterAltura
   val width = GameView.obterLargura
   
-  val cells = Array.ofDim[Cell](height, width)
+  /* Instanciando as células na matriz */
+  var cells = Array.fill(height, width){new Cell}
   
-  
-  for(i <- (0 until height)) {
-    for(j <- (0 until width)) {
-      cells(i)(j) = new Cell
-    }
+  /* Padrão de projeto Memento */
+  def createMemento: Memento = {
+    val m = new Memento
+    m.setState(cells)
+    return m
   }
   
-  for(i <- (0 until 2))
-    for(j <- (0 until 2))
-      cells(i)(j).revive
-      
-  cells(1)(9).revive
-  cells(0)(9).revive
-  cells(9)(0).revive
-  cells(9)(1).revive
-  cells(9)(9).revive
-
+  def setMemento(m: Memento) = {
+    m.getState.zipWithIndex.foreach(lgroup => {
+      val (l,i) = lgroup
+      l.zipWithIndex.foreach(rgroup => {
+        val (r,j) = rgroup
+        if(r.isAlive) cells(i)(j).revive
+        else cells(i)(j).kill
+      })
+    })
+  }
+  
+  Source.fromResource("configuracao.txt").getLines.zipWithIndex.foreach(lgroup => {
+    val (line,i) = lgroup
+    line.split(" ").zipWithIndex.foreach(rgroup => {
+      val (row,j) = rgroup
+      if(row.toInt == 1 && validPosition(i,j)) cells(i)(j).revive;
+    })
+  })
+  
   /**
 	 * Calcula uma nova geracao do ambiente. Essa implementacao utiliza o
 	 * algoritmo do Conway, ou seja:

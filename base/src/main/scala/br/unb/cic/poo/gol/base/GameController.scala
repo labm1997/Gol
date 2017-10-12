@@ -1,11 +1,25 @@
 package br.unb.cic.poo.gol.base
 
+import scala.collection.mutable.Stack
+
+import java.util.TimerTask
+import java.util.Timer
+
 /**
  * Relaciona o componente View com o componente Model. 
  * 
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
  */
 object GameController {
+
+  val cellsList = new Stack[Memento]()
+  val timer = new Timer()
+  val updateTask = new TimerTask {
+    def run = {
+      GameEngine.nextGeneration
+      GameView.printBoard
+    }
+  }
   
   def start {
     GameView.update
@@ -31,7 +45,27 @@ object GameController {
   }
   
   def nextGeneration {
+    cellsList.push(GameEngine.createMemento)
     GameEngine.nextGeneration
+    GameView.update
+  }
+  
+  def backGeneration {
+    try {
+      GameEngine.setMemento(cellsList.pop)
+    }
+    catch {
+      case ex: NoSuchElementException => {
+        println("Sem passado")
+      }
+    }
+    GameView.update
+  }
+  
+  def automatico {
+    timer.schedule(updateTask, 1000L, 1000L)
+    readLine
+    timer.cancel()
     GameView.update
   }
   

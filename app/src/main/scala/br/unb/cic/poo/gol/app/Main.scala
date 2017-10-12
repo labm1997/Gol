@@ -3,10 +3,12 @@ package br.unb.cic.poo.gol.app
 import br.unb.cic.poo.gol.base.GameEngine
 import br.unb.cic.poo.gol.base.GameController
 import br.unb.cic.poo.gol.base.Regra
+import br.unb.cic.poo.gol.base.GameView
 
 import scala.io.Source
 import scala.io.StdIn
 import scala.collection.mutable.MutableList
+
 
 /**
  * Programa principal do GoL.
@@ -30,7 +32,7 @@ object Main {
     println("Selecione o modo de jogo:")
     regras.foreach( a => {println("["+i+"] " + a.nome); i+=1})
     
-    val valor = StdIn.readInt()
+    val valor = GameView.parseRowandColumn(readLine).getOrElse(0)
       
     if(valor > 0 && valor <= regras.length) GameEngine.definirRegra(regras(valor-1))
     else {println("Opção inválida"); mostrarSelecao(regras)}
