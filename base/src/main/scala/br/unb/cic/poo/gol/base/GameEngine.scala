@@ -13,8 +13,8 @@ import scala.io.Source
  */
 object GameEngine {
   
-  val height = 100
-  val width = 100
+  var height = 20
+  var width = 20
   val random = new java.security.SecureRandom
   
   /* Instanciando as células na matriz */
@@ -166,7 +166,7 @@ object GameEngine {
   private def shouldRevive(i: Int, j: Int): Boolean = regra.shouldRevive(i,j)
   
   /* Calcula a posição caso haja overflow ou underflow */
-  private def posicao(i: Int, limite: Int): Int = (i%limite+limite)%limite
+  def posicao(i: Int, limite: Int): Int = (i%limite+limite)%limite
   
   /*
 	 * Computa o numero de celulas vizinhas vivas, dada uma posicao no ambiente
