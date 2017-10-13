@@ -3,6 +3,7 @@ package br.unb.cic.poo.gol.base
 import scala.io.StdIn.{readInt, readLine}
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -18,7 +19,13 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
  * @author Breno Xavier (baseado na implementacao Java de rbonifacio@unb.br
  */
  
-class GolScreen(width: Int, height: Int, cellSize: Int) extends ApplicationListener {
+class Coordinates(var x: Int, var y: Int)
+ 
+/*
+ * Tela padrão
+ */
+ 
+class GolScreen(var width: Int, var height: Int, cellSize: Coordinates) extends ApplicationListener {
 	private var batch: SpriteBatch = null
 	private var shapeRenderer: ShapeRenderer = null
 
@@ -32,15 +39,15 @@ class GolScreen(width: Int, height: Int, cellSize: Int) extends ApplicationListe
 	}
 
 	override def render() {
-	  Gdx.gl.glClearColor(0,0,0,1)
+	  Gdx.gl.glClearColor(0,0,0, 1)
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 		batch.begin()
 		  for(i <- (0 until height)) {
 		    for(j <- (0 until width)) {
 		      shapeRenderer.begin(ShapeType.Filled);
 		        if(GameEngine.isCellAlive(i, j)){
-              shapeRenderer.setColor(1, 1, 1, 1);
-              shapeRenderer.rect(i*cellSize, j*cellSize, cellSize, cellSize);
+              shapeRenderer.setColor(0.11f, 0.32f, 0.47f, 1);
+              shapeRenderer.rect((j)*cellSize.x, (height-1-i)*cellSize.y, cellSize.x, cellSize.y);
             }
           shapeRenderer.end();
         }
@@ -49,7 +56,8 @@ class GolScreen(width: Int, height: Int, cellSize: Int) extends ApplicationListe
 	}
 	
 	override def resize(width: Int, height: Int) {
-	
+	  
+	  
 	}
 	
 	override def pause() {
@@ -60,6 +68,45 @@ class GolScreen(width: Int, height: Int, cellSize: Int) extends ApplicationListe
 	
 	}
 }
+
+/*
+ * Processador de entradas
+ */
+ 
+class MyInputProcessor extends InputProcessor {
+   var auto: Boolean = false
+   def keyDown (keycode: Int): Boolean = false
+   def keyUp (keycode: Int): Boolean = {
+    if(keycode == 22) GameController.nextGeneration
+    if(keycode == 21) GameController.backGeneration
+    return false
+   }
+   def keyTyped (character: Char): Boolean = {
+    println(character)
+    if(character == 'a' && !auto) {
+      GameController.automatico
+      auto = true
+    }
+    if(character == 's' && auto) {
+      GameController.updateTask.cancel()
+      auto = false
+    }
+    if(character == 'q') GameController.halt
+    return false
+   }
+   def touchDown (x: Int, y: Int, pointer: Int, button: Int): Boolean = false
+   def touchUp (x: Int, y: Int, pointer: Int, button: Int): Boolean = false
+   def mouseMoved (x: Int, y: Int): Boolean = false
+   def scrolled (amount: Int): Boolean = false
+   def touchDragged (x: Int, y: Int, pointer: Int): Boolean = {
+        GameEngine.makeCellAlive(
+          GameEngine.posicao((y/GameView.cellSize.y).toInt, GameEngine.height), 
+          GameEngine.posicao((x/GameView.cellSize.x).toInt, GameEngine.width)
+        )
+    return false;
+   }
+}
+
  
 object GameView {
   
@@ -73,13 +120,13 @@ object GameView {
 	private final val HALT = 3
 	private final val BACK_GENERATION = 4
 	private final val AUTOMATICO = 5
+		
+	var cellSize = new Coordinates(20,20)
 	
-	private val largura = GameEngine.width
-	private val altura = GameEngine.height
-	private val cellSize = 15
+	def obterLargura = GameEngine.width
+	def obterAltura = GameEngine.height
 	
-	def obterLargura = largura
-	def obterAltura = altura
+	var inputProcessor: MyInputProcessor = null
   
   /**
 	 * Atualiza o componente view (representado pela classe GameBoard),
@@ -89,11 +136,14 @@ object GameView {
   
     val config: LwjglApplicationConfiguration = new LwjglApplicationConfiguration
     config.title = "Oiiiiiiii"
-    config.width = largura*cellSize
-    config.height = altura*cellSize
-    config.useGL30 = false;
+    config.width = GameEngine.width*cellSize.x
+    config.height = GameEngine.height*cellSize.y
+    config.useGL30 = true;
     
-    new LwjglApplication(new GolScreen(largura,altura,cellSize), config)
+    new LwjglApplication(new GolScreen(GameEngine.width,GameEngine.height,cellSize), config)
+	
+    inputProcessor = new MyInputProcessor();
+    Gdx.input.setInputProcessor(inputProcessor);
     
     /*
 		printFirstRow
@@ -110,10 +160,10 @@ object GameView {
 	}
 	
 	def update {
-		printOptions
+		//printOptions
 	}
   
-  private def printOptions {
+ /* private def printOptions {
 	  
 	  var option = 0
 	  println("\n\n")
@@ -138,9 +188,9 @@ object GameView {
       case BACK_GENERATION => backGeneration
       case AUTOMATICO => automatico
     }
-	}
+	}*/
   
-  private def makeCellAlive {
+  /*private def makeCellAlive {
 	  
 	  var i = 0
 	  var j = 0
@@ -153,46 +203,46 @@ object GameView {
     } while(!validPosition(i,j))
       
     GameController.makeCellAlive(i, j)
-	}
+	}*/
 
-  private def nextGeneration = GameController.nextGeneration
+  /*private def nextGeneration = GameController.nextGeneration
   private def backGeneration = GameController.backGeneration
   private def automatico = GameController.automatico
-  private def halt = GameController.halt
+  private def halt = GameController.halt*/
 	
   private def validPosition(i: Int, j: Int): Boolean = {
 		i >= 0 && i < GameEngine.height && j >= 0 && j < GameEngine.width
 	}
   
-	def parseOption(option: String): Int = option match {
+	/*def parseOption(option: String): Int = option match {
     case "1" => MAKE_CELL_ALIVE
     case "2" => NEXT_GENERATION
     case "3" => HALT
     case "4" => BACK_GENERATION
     case "5" => AUTOMATICO
     case _ => INVALID_OPTION
-  }
+  }*/
 	
   
   /* Imprime uma linha usada como separador das linhas do tabuleiro */
-	private def printLine() {
+	/*private def printLine() {
 	  for(j <- (0 until GameEngine.width)) {
 	    print(LINE)
 	  }
 	  println()
-	}
+	}*/
   
   /*
 	 * Imprime os identificadores das colunas na primeira linha do tabuleiro
 	 */
-	private def printFirstRow {
+	/*private def printFirstRow {
 		println("\n \n");
 		
 		for(j <- (0 until GameEngine.width)) {
 		  print("   " + j + "   ")
 		}
 		println()
-	}
+	}*/
   
 
   def parseRowandColumn(x: String): Option[Int] = {

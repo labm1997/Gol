@@ -1,6 +1,6 @@
 package br.unb.cic.poo.gol.base
 
-import scala.collection.mutable.Stack
+import scala.collection.mutable.ListBuffer
 
 import java.util.TimerTask
 import java.util.Timer
@@ -12,8 +12,9 @@ import java.util.Timer
  */
 object GameController {
 
-  val cellsList = new Stack[Memento]()
+  val cellsList = new ListBuffer[Memento]
   val timer = new Timer()
+  var updateTask: TimerTask = null
   
   def start {
     GameView.createBoard
@@ -40,17 +41,18 @@ object GameController {
   }
   
   def nextGeneration {
-    cellsList.push(GameEngine.createMemento)
+    if(cellsList.size > 10) cellsList.remove(0) // Remove-se o mais antigo
+    cellsList += GameEngine.createMemento
     GameEngine.nextGeneration
     GameView.update
   }
   
   def backGeneration {
     try {
-      GameEngine.setMemento(cellsList.pop)
+      GameEngine.setMemento(cellsList.remove(cellsList.size-1))
     }
     catch {
-      case ex: NoSuchElementException => {
+      case ex: IndexOutOfBoundsException => {
         println("Sem passado")
       }
     }
@@ -58,15 +60,14 @@ object GameController {
   }
   
   def automatico {
-    val updateTask = new TimerTask {
+    updateTask = new TimerTask {
       def run = {
-        cellsList.push(GameEngine.createMemento)
+        if(cellsList.size > 10) cellsList.remove(0) // Remove-se o mais antigo
+        cellsList += GameEngine.createMemento
         GameEngine.nextGeneration
       }
     }
     timer.schedule(updateTask, 17L, 17L)
-    readLine
-    updateTask.cancel()
     GameView.update
   }
   
