@@ -4,6 +4,7 @@ import br.unb.cic.poo.gol.base.GameEngine
 import br.unb.cic.poo.gol.base.GameController
 import br.unb.cic.poo.gol.base.Regra
 import br.unb.cic.poo.gol.base.GameView
+import br.unb.cic.poo.gol.base.Conway
 
 import scala.io.Source
 import scala.io.StdIn
@@ -19,8 +20,9 @@ object Main {
     
   def main(args: Array[String]){
     val regras = encontrarRegras("regras.txt")
-    GameView.showRules(regras)
-    GameController.start
+    //GameView.Tela
+    GameController.setRule(regras(0))
+    GameController.start(regras)
   }
   
 
@@ -31,4 +33,3 @@ object Main {
     Source.fromResource(arquivo).getLines().map[Regra]( (a:String) => Class.forName(a).newInstance.asInstanceOf[Regra]).toList
 
 }
-

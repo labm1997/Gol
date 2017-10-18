@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: base
+Implementation-Version: 1.0
+Specification-Vendor: br.unb.cic.poo.gol
+Specification-Title: base
+Implementation-Vendor-Id: br.unb.cic.poo.gol
+Specification-Version: 1.0
+Implementation-Vendor: br.unb.cic.poo.gol
+

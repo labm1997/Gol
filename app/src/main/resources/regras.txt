@@ -1,5 +1,5 @@
 br.unb.cic.poo.gol.base.Conway
 br.unb.cic.poo.gol.base.HighLife
-br.unb.cic.poo.gol.base.Vinicius
-br.unb.cic.poo.gol.base.Luiz
-br.unb.cic.poo.gol.base.Helio
+br.unb.cic.poo.gol.extensions.Vinicius
+br.unb.cic.poo.gol.extensions.Luiz
+br.unb.cic.poo.gol.extensions.Helio

@@ -16,8 +16,11 @@ object GameController {
   val timer = new Timer()
   var updateTask: TimerTask = null
   
-  def start {
-    GameView.createBoard
+  def start(rules: List[Regra]) {
+    rules.foreach(r => GameEngine.addRule(r))
+    GameView.intro
+    GameView.showRules(rules)
+    GameView.Tela
     GameView.update
   }
   

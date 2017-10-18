@@ -13,9 +13,14 @@ import scala.io.Source
  */
 object GameEngine {
   
-  var height = 20
-  var width = 20
+  val height = 20
+  val width = 50
   val random = new java.security.SecureRandom
+  private var rulesList = new ListBuffer[Regra]
+  
+  // Insere na lista de regas
+  def addRule(rule: Regra) = rulesList += rule
+  def getRules = rulesList
   
   /* Instanciando as células na matriz */
   var cells = Array.fill(height, width){new Cell}
@@ -62,7 +67,6 @@ object GameEngine {
 	 */
 	   
   def nextGeneration {
-    
     val mustRevive = new ListBuffer[Cell]
     val mustKill = new ListBuffer[Cell]
 
